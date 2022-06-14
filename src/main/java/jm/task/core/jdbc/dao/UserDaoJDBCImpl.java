@@ -62,10 +62,12 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
+        List<User> usersAr = new ArrayList<>();
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from users");
+            String sql = "select * from users";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            //preparedStatement.setString(1, "users");
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
 
@@ -74,12 +76,12 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setLastName(resultSet.getString("lastName"));
                 user.setAge(resultSet.getByte("age"));
 
-                users.add(user);
+                usersAr.add(user);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return users;
+        return usersAr;
     }
 
     public void cleanUsersTable() {
